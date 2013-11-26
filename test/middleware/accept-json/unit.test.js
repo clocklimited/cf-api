@@ -1,7 +1,7 @@
 var assert = require('assert')
-  , middleware = require('../../../middleware/accepts')
+  , middleware = require('../../../middleware/accept-json')
 
-describe('accepts middleware unit tests', function () {
+describe('middleware/accept-json unit tests', function () {
 
   it('should send a 406 response to a request with no "Accept"', function (done) {
     function mockSend(statusCode) {
@@ -11,7 +11,7 @@ describe('accepts middleware unit tests', function () {
     middleware({ headers: {} }, { send: mockSend })
   })
 
-  it('should send a 406 response to a request without "application/json" in "Accept" header', function (done) {
+  it('should send a 406 response to a request without json in "Accept" header', function (done) {
     function mockSend(statusCode) {
       assert.equal(statusCode, 406)
       done()

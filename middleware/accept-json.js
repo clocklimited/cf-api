@@ -1,6 +1,10 @@
-module.exports = acceptsMiddleware
+module.exports = acceptMiddleware
 
-function acceptsMiddleware(req, res, next) {
+/*
+ * Middleware to ensure the API only talks to
+ * clients that accept JSON as a response.
+ */
+function acceptMiddleware(req, res, next) {
 
   // If no 'Accept: x' header then bye
   if (!req.headers.accept) return res.send(406)

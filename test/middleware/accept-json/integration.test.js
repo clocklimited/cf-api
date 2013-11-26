@@ -1,8 +1,8 @@
 var request = require('supertest')
   , express = require('express')
-  , middleware = require('../../../middleware/accepts')
+  , middleware = require('../../../middleware/accept-json')
 
-describe('accepts middleware integration tests', function () {
+describe('middleware/accept-json integration tests', function () {
 
   var app
 
@@ -20,28 +20,28 @@ describe('accepts middleware integration tests', function () {
       .expect(406, done)
   })
 
-  it('should send a 406 response to a request without "application/json" in the "Accept" header', function (done) {
+  it('should send a 406 response to a request without json in the "Accept" header', function (done) {
     request(app)
       .get('/')
       .set('Accept', 'text/html,text/plain,*/*')
       .expect(406, done)
   })
 
-  it('should delegate to the route handler if "application/json" exists in the "Accept" header', function (done) {
+  it('should delegate to the route handler if json exists in the "Accept" header', function (done) {
     request(app)
       .get('/')
       .set('Accept', 'application/json')
       .expect(200, done)
   })
 
-  it('should be ok if "application/json" is not the first mime type in the "Accept" header', function (done) {
+  it('should be ok if json is not the first mime type in the "Accept" header', function (done) {
     request(app)
       .get('/')
       .set('Accept', 'text/plain,application/json')
       .expect(200, done)
   })
 
-  it('should be ok if "application/json" is not the preferred mime type in the "Accept" header', function (done) {
+  it('should be ok if json is not the preferred mime type in the "Accept" header', function (done) {
     request(app)
       .get('/')
       .set('Accept', 'text/plain; q=0.8,application/json; q=0.5')

@@ -5,8 +5,8 @@ var express = require('express')
   , tag = require('./middleware/tag')
   , cors = require('./middleware/cors')
   , badRequest = require('./middleware/bad-request')
-  , accepts = require('./middleware/accepts')
-  , contentType = require('./middleware/content-type')
+  , acceptJson = require('./middleware/accept-json')
+  , contentTypeJson = require('./middleware/content-type-json')
   , cors = require('./middleware/cors')
   , errorHandler = require('./middleware/error')
   , noCache = require('./middleware/no-cache')
@@ -43,8 +43,8 @@ function createServer(serviceLocator) {
     .use(express.json())
 
     // Server only speaks JSON
-    .use(accepts)
-    .use(contentType)
+    .use(acceptJson)
+    .use(contentTypeJson)
 
     // Handle content-type mismatch
     .use(badRequest)
