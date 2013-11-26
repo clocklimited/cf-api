@@ -48,7 +48,7 @@ describe('middleware/content-type-json unit tests', function () {
 
     function mockJson(err, statusCode) {
       assert.equal(400, statusCode)
-      assert.equal(err.error, 'API only supports application/json content-type')
+      assert.equal('API only supports application/json content-type', err.error)
       done()
     }
 
