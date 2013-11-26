@@ -38,9 +38,15 @@ describe('middleware/content-type-json unit tests', function () {
       if (++i === 3) done()
     }
 
-    middleware({ method: 'POST', headers: {} }, { json: mockJson })
-    middleware({ method: 'PUT', headers: {} }, { json: mockJson })
-    middleware({ method: 'PATCH', headers: {} }, { json: mockJson })
+    middleware({ method: 'POST', headers: {} }, { json: mockJson }, function () {
+      assert(false, 'should not call next()')
+    })
+    middleware({ method: 'PUT', headers: {} }, { json: mockJson }, function () {
+      assert(false, 'should not call next()')
+    })
+    middleware({ method: 'PATCH', headers: {} }, { json: mockJson }, function () {
+      assert(false, 'should not call next()')
+    })
 
   })
 
@@ -52,7 +58,9 @@ describe('middleware/content-type-json unit tests', function () {
       done()
     }
 
-    middleware({ method: 'POST', headers: { 'content-type': 'application/xml' } }, { json: mockJson })
+    middleware({ method: 'POST', headers: { 'content-type': 'application/xml' } }, { json: mockJson }, function () {
+      assert(false, 'should not call next()')
+    })
 
   })
 

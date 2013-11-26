@@ -1,15 +1,21 @@
 module.exports = createErrorMiddleware
 
-var _ = require('lodash')
+var pick = require('lodash.pick')
 
+/*
+ * Create a error handling middleware (one that gets called if
+ * some route handler does next(err)). This logs the error and responds
+ * to the client.
+ */
 function createErrorMiddleware(logger) {
+
   /* jshint unused: false */
   return function errorHandler(error, req, res, next) {
-    res.send(error.message, error.status || 500)
+    res.json({ error: error.message }, error.status || 500)
     logger.error('Error occurred while handling request:\n',
-      _.pick(req, 'method', 'url', 'query', 'headers', 'ip', 'ips')
+      pick(req, 'method', 'url', 'query', 'headers', 'ip', 'ips')
       , '\n' + error.message
       , '\n' + error.stack)
-
   }
+
 }

@@ -1,9 +1,9 @@
 var request = require('supertest')
   , assert = require('assert')
   , express = require('express')
-  , middleware = require('../../../middleware/no-cache')
+  , middleware = require('../../../middleware/tag')
 
-describe('middleware/no-cache integration tests', function () {
+describe('middleware/tag integration tests', function () {
 
   var app
 
@@ -15,14 +15,13 @@ describe('middleware/no-cache integration tests', function () {
     })
   })
 
-  it('should set the correct cache control headers', function (done) {
+  it('should set the correct header', function (done) {
 
     request(app)
       .get('/')
       .end(function (err, res) {
         assert(!err)
-        assert.equal('no-cache', res.headers.pragma)
-        assert.equal('no-cache', res.headers['cache-control'])
+        assert.equal(res.headers['x-powered-by'], 'Catfish')
         assert.equal(200, res.statusCode)
         done()
       })

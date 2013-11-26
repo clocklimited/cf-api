@@ -4,7 +4,6 @@ var express = require('express')
   , logger = require('./middleware/logger')
   , tag = require('./middleware/tag')
   , cors = require('./middleware/cors')
-  , badRequest = require('./middleware/bad-request')
   , acceptJson = require('./middleware/accept-json')
   , contentTypeJson = require('./middleware/content-type-json')
   , cors = require('./middleware/cors')
@@ -46,11 +45,11 @@ function createServer(serviceLocator) {
     .use(acceptJson)
     .use(contentTypeJson)
 
-    // Handle content-type mismatch
-    .use(badRequest)
-
     // Set headers to prevent caching
     .use(noCache)
+
+    // Be explicit about where in the stack routes handlers are positioned
+    .use(app.router)
 
     // Handle and log server error
     .use(errorHandler(serviceLocator.logger))

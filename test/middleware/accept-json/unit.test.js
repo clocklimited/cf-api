@@ -16,7 +16,9 @@ describe('middleware/accept-json unit tests', function () {
       assert.equal(statusCode, 406)
       done()
     }
-    middleware({ headers: { accept: 'jim,application/jsin,text/html,text/plain' } }, { send: mockSend })
+    middleware({ headers: { accept: 'jim,application/jsin,text/html,text/plain' } }, { send: mockSend }, function () {
+      assert(false, 'should not call next()')
+    })
   })
 
   it('should be ok with "application/json; q=0.8" in "Accept" header', function (done) {
@@ -36,7 +38,10 @@ describe('middleware/accept-json unit tests', function () {
       assert.equal(statusCode, 406)
       done()
     }
-    middleware({ headers: { accept: 'crapplication/json , text/html ,text/plain,*/*' } }, { send: mockSend })
+    var accept = 'crapplication/json , text/html ,text/plain,*/*'
+    middleware({ headers: { accept: accept } }, { send: mockSend }, function () {
+      assert(false, 'should not call next()')
+    })
   })
 
 })
