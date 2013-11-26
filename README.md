@@ -1,6 +1,6 @@
 # cf-api
 
-A pluggable server for HTTP APIs.
+A pluggable JSON API server
 
 This is CatfishApi but without all of the bloat and a simple API to register plugins.
 Everything becomes a plugin.
