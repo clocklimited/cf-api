@@ -44,7 +44,7 @@ Create an API instance. There are two options available:
 - `allowedDomains` - a whitelist of allowed domains that cross-domain requests may come from (default: `[]`)
 - `logger` - a logger object with methods `debug()`, `info()`, `warn()` and `error()` (default: `console`)
 
-### api.plugins(Array: plugins) or plugin(Function: plugin)
+### api.plugins(Array: plugins) or api.plugin(Function: plugin)
 
 Register a list of plugins (or a single plugin). These are not run when they are registered, but when `initialize()`
 is called.
