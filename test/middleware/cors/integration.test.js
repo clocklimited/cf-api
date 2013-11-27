@@ -1,51 +1,49 @@
 var request = require('supertest')
+  , assert = require('assert')
   , express = require('express')
-  , middleware = require('../../../middleware/cors')
+  , createMiddleware = require('../../../middleware/cors')
 
-describe.skip('middleware/cors integration tests', function () {
+describe('middleware/cors integration tests', function () {
 
   var app
 
   before(function () {
     app = express()
-    app.use(middleware)
-    app.get('/', function (req, res) {
+    app.use(createMiddleware([ 'http://127.0.0.1/' ]))
+    app.all('/', function (req, res) {
       res.send(200)
     })
   })
 
-  it('should send a 406 response to a request with no "Accept"', function (done) {
+  it('should pass through if no origin header exists', function (done) {
     request(app)
       .get('/')
-      .expect(406, done)
-  })
-
-  it('should send a 406 response to a request without json in the "Accept" header', function (done) {
-    request(app)
-      .get('/')
-      .set('Accept', 'text/html,text/plain,*/*')
-      .expect(406, done)
-  })
-
-  it('should delegate to the route handler if json exists in the "Accept" header', function (done) {
-    request(app)
-      .get('/')
-      .set('Accept', 'application/json')
       .expect(200, done)
   })
 
-  it('should be ok if json is not the first mime type in the "Accept" header', function (done) {
+  it('should send a 403 response to a request with an origin not in the allow list', function (done) {
     request(app)
-      .get('/')
-      .set('Accept', 'text/plain,application/json')
+      .put('/')
+      .set('Origin', 'http://jim.com')
+      .expect(403, done)
+  })
+
+  it('should set the correct response headers for a request with an origin in the allow list', function (done) {
+    request(app)
+      .post('/')
+      .set('Origin', 'http://127.0.0.1/')
       .expect(200, done)
   })
 
-  it('should be ok if json is not the preferred mime type in the "Accept" header', function (done) {
+  it('should set cache headers on OPTIONS requests', function (done) {
     request(app)
-      .get('/')
-      .set('Accept', 'text/plain; q=0.8,application/json; q=0.5')
-      .expect(200, done)
+      .options('/')
+      .set('Origin', 'http://127.0.0.1/')
+      .expect(200, function (err, res) {
+        if (err) return done(err)
+        assert.equal('max-age=86400', res.header['cache-control'])
+        done()
+      })
   })
 
 })
