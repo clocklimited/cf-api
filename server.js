@@ -10,7 +10,7 @@ var express = require('express')
   , errorHandler = require('./middleware/error')
   , noCache = require('./middleware/no-cache')
 
-function createServer(serviceLocator) {
+function createServer(options) {
 
   var app = express()
 
@@ -27,7 +27,7 @@ function createServer(serviceLocator) {
   app
 
     // Wire up the express logger to the app logger
-    .use(logger(serviceLocator.logger))
+    .use(logger(options.logger))
 
     // X-Powered-By: Catfish
     .use(tag)
@@ -36,7 +36,7 @@ function createServer(serviceLocator) {
     .use(express.responseTime())
 
     // Whitelist cross domain requests
-    .use(cors(serviceLocator.properties.allowedDomains))
+    .use(cors(options.allowedDomains))
 
     // Body parse API for JSON content type
     .use(express.json())
@@ -52,7 +52,7 @@ function createServer(serviceLocator) {
     .use(app.router)
 
     // Handle and log server error
-    .use(errorHandler(serviceLocator.logger))
+    .use(errorHandler(options.logger))
 
   return app
 

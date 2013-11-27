@@ -2,28 +2,50 @@ module.exports = createApi
 
 var async = require('async')
   , createServer = require('./server')
+  , extend = require('lodash.assign')
+  , defaults =
+    { allowedDomains: []
+    , logger: console
+    }
 
-function createApi(serviceLocator) {
-  return new Api(serviceLocator)
+/*
+ * Create a new API instance
+ */
+function createApi(options) {
+  return new Api(options)
 }
 
-function Api(serviceLocator) {
-  this._serviceLocator = serviceLocator
+/*
+ * API constructor. Instantiates an empty list of plugins.
+ */
+function Api(options) {
   this._plugins = []
+  this._options = extend({}, defaults, options)
 }
 
-Api.prototype.plugin = function (path) {
+/*
+ * Add one or many API plugins.
+ */
+Api.prototype.plugins = function (path) {
   if (!Array.isArray(path)) path = [ path ]
   this._plugins = this._plugins.concat(path)
   return this
 }
 
-Api.prototype.initialize = function (cb) {
-  var server = createServer(this._serviceLocator)
-  this._serviceLocator.app = server
-  this._serviceLocator.router = server
-  async.eachSeries(this._plugins, function (path, cb) {
-    this._serviceLocator.logger.info('Initializing plugin: ' + path)
-    require(path)(this._serviceLocator, cb)
-  }.bind(this), cb)
+// Alias plugin/plugins
+Api.prototype.plugin = Api.prototype.plugins
+
+/*
+ * Create the server, initialize all of the plugins
+ * and callback with the server.
+ */
+Api.prototype.initialize = function (serviceLocator, cb) {
+  var server = createServer(this._options)
+  async.eachSeries(this._plugins, function (plugin, cb) {
+    this._options.logger.info('Initializing plugin: ' + plugin)
+    plugin(serviceLocator, server, cb)
+  }.bind(this), function (err) {
+    if (err) return cb(err)
+    cb(null, server)
+  })
 }
