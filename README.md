@@ -25,13 +25,13 @@ api(options)
   })
 ```
 
-A plugin is just a node module with a single async function exported:
+A plugin is just a node module with a single synchronous function exported:
 
 ```js
 module.exports = init
 
-function init(serviceLocator, router, cb) {
-  cb(null)
+function init(serviceLocator, router) {
+  // Do plugin things…
 }
 ```
 
@@ -54,9 +54,9 @@ Returns `api` for chaining.
 ### api.initialize(Object: serviceLocator, Function: cb)
 
 Create the server, initialize all of the plugins and callback with the server. Plugin initialize
-functions are called with the following arguments: `plugin(serviceLocator, router, cb)`.
+functions are called with the following arguments: `plugin(serviceLocator, router)`.
 
-Plugins are initialized in the order that they were passed to `plugin()`, and in series.
+Plugins are initialized in the order that they were passed to `plugin()`.
 
 `serviceLocator` is a place where your plugins can speak to application level services.
 It could be a plain JS object, but it's better to use something like

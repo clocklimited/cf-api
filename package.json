@@ -23,7 +23,6 @@
     "node": ">=0.8"
   },
   "dependencies": {
-    "async": "~0.2.9",
     "express": "~3.4.4",
     "lodash.pick": "~2.3.0",
     "lodash.assign": "~2.4.0"

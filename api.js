@@ -1,7 +1,6 @@
 module.exports = createApi
 
-var async = require('async')
-  , createServer = require('./server')
+var createServer = require('./server')
   , extend = require('lodash.assign')
   , defaults =
     { allowedDomains: []
@@ -37,15 +36,16 @@ Api.prototype.plugin = Api.prototype.plugins
 
 /*
  * Create the server, initialize all of the plugins
- * and callback with the server.
+ * and return the server.
  */
 Api.prototype.initialize = function (serviceLocator, cb) {
   var server = createServer(this._options)
-  async.eachSeries(this._plugins, function (plugin, cb) {
-    this._options.logger.info('Initializing plugin: ' + plugin)
-    plugin(serviceLocator, server, cb)
-  }.bind(this), function (err) {
-    if (err) return cb(err)
+  try {
+    this._plugins.forEach(function (plugin) {
+      plugin(serviceLocator, server)
+    })
     cb(null, server)
-  })
+  } catch (e) {
+    cb(e)
+  }
 }

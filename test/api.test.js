@@ -47,9 +47,8 @@ describe('api', function () {
       var initialized = 0
 
       function plugin(n) {
-        return function (serviceLocator, router, cb) {
+        return function () {
           assert.equal(n, ++initialized)
-          cb(null)
         }
       }
 
@@ -65,8 +64,8 @@ describe('api', function () {
 
     it('should stop on the first error', function (done) {
 
-      function run(serviceLocator, router, cb) {
-        cb(new Error('Startup error'))
+      function run() {
+        throw new Error('Startup error')
       }
 
       function notRun() {
