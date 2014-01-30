@@ -26,7 +26,7 @@ describe('middleware/cors unit tests', function () {
 
     function mockSet(headers) {
       assert.deepEqual(
-        { 'Access-Control-Allow-Origin': allowed[0]
+        { 'Access-Control-Allow-Origin': '*'
         , 'Access-Control-Allow-Headers': 'Authorization, Content-Type, x-cf-date, *'
         , 'Access-Control-Request-Headers': '*'
         , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
