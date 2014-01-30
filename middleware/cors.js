@@ -15,7 +15,7 @@ function createCorsMiddleware(allowedDomains) {
 
       // Request came from allowed domain so set acces control headers
       res.set(
-        { 'Access-Control-Allow-Origin': req.headers.origin
+        { 'Access-Control-Allow-Origin': '*'
         , 'Access-Control-Allow-Headers': 'Authorization, Content-Type, x-cf-date, *'
         , 'Access-Control-Request-Headers': '*'
         , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
