@@ -23,6 +23,9 @@ function createCorsMiddleware(checkDomain) {
           , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
           })
 
+        // Don't call next() if this is a preflight CORS check
+        if (req.method === 'OPTIONS') return res.end()
+
         next()
 
       })

@@ -49,4 +49,25 @@ describe('middleware/cors unit tests', function () {
 
   })
 
+  it('should not call next() if req.method is OPTIONS', function (done) {
+
+    var allowed = [ 'http://127.0.0.1/' ]
+
+    function checkOrigin(url, cb) {
+      cb(null, allowed.indexOf(url) !== -1)
+    }
+
+    function mockEnd() {
+      done()
+    }
+
+    createMiddleware(checkOrigin)(
+        { headers: { origin: allowed[0] }
+        , method: 'OPTIONS'
+        }
+      , { end: mockEnd, set: function () {} }, function () {
+          assert(false, 'next() should not have been called')
+        })
+  })
+
 })
