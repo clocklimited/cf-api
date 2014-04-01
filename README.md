@@ -69,6 +69,9 @@ error (`err!=null`).
 
 ## Changelog
 
+### 1.0.1
+- Fixed cors middleware not terminating preflight requests. Do not use 1.0.0, please upgrade.
+
 ### 1.0.0
 - Added `checkOrigin` option in place of `allowedDomains`. Latter is still supported for compatibility.
 
