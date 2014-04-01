@@ -41,8 +41,10 @@ function init(serviceLocator, router) {
 
 Create an API instance. There are two options available:
 
-- `checkOrigin` - a `function (origin, cb) {}` to check cross origin requests. `cb(null, true)` to allow and `origin`, `cb(null, false)` to deny an origin. Defaults to `cb(null, true)` for all requests, meaning all cross-domain requests are allowed. It is up to the user to implement their whitelist/blacklist. *For backwards compatibility, the `allowedDomains` option still works and generates a `checkOrigin` function for you.*
+- `checkOrigin` - a function with the signature `function (url, cb) {}` to check `req.headers.origin`. `cb(null, true)` to allow and `origin`, `cb(null, false)` to deny an origin. Defaults to `cb(null, true)` for all requests, meaning all cross-domain requests are allowed. It is up to the user to implement their whitelist/blacklist.
 - `logger` - a logger object with methods `debug()`, `info()`, `warn()` and `error()` (default: `console`)
+
+*For backwards compatibility, the `allowedDomains` option still works and generates a `checkOrigin` function for you.*
 
 ### api.plugins(Array: plugins) or api.plugin(Function: plugin)
 
