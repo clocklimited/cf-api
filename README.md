@@ -67,6 +67,14 @@ It could be a plain JS object, but it's better to use something like
 `cb(err, server)` is called when all plugins have been initialized (`err=null`), or on the first
 error (`err!=null`).
 
+## Changelog
+
+### 1.0.0
+- Added `checkOrigin` option in place of `allowedDomains`. Latter is still supported for compatibility.
+
+### Pre 1.0.0
+- Unstable!
+
 ## Credits
 Built by developers at [Clock](http://clock.co.uk).
 
