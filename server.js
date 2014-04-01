@@ -36,7 +36,7 @@ function createServer(options) {
     .use(express.responseTime())
 
     // Whitelist cross domain requests
-    .use(cors(options.allowedDomains))
+    .use(cors(options.checkOrigin))
 
     // Body parse API for JSON content type
     .use(express.json())

@@ -1,15 +1,19 @@
 var request = require('supertest')
-  , assert = require('assert')
   , express = require('express')
   , createMiddleware = require('../../../middleware/cors')
 
 describe('middleware/cors integration tests', function () {
 
   var app
+    , allowed = [ 'http://127.0.0.1/' ]
+
+  function checkOrigin(url, cb) {
+    cb(null, allowed.indexOf(url) !== -1)
+  }
 
   before(function () {
     app = express()
-    app.use(createMiddleware([ 'http://127.0.0.1/' ]))
+    app.use(createMiddleware(checkOrigin))
     app.all('/', function (req, res) {
       res.send(200)
     })
@@ -33,17 +37,6 @@ describe('middleware/cors integration tests', function () {
       .post('/')
       .set('Origin', 'http://127.0.0.1/')
       .expect(200, done)
-  })
-
-  it('should set cache headers on OPTIONS requests', function (done) {
-    request(app)
-      .options('/')
-      .set('Origin', 'http://127.0.0.1/')
-      .expect(200, function (err, res) {
-        if (err) return done(err)
-        assert.equal('max-age=86400', res.header['cache-control'])
-        done()
-      })
   })
 
 })

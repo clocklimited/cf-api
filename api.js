@@ -3,7 +3,10 @@ module.exports = createApi
 var createServer = require('./server')
   , extend = require('lodash.assign')
   , defaults =
-    { allowedDomains: []
+    { checkOrigin: function (domain, cb) {
+        // Allow all domains by default
+        cb(null, true)
+      }
     , logger: console
     }
 
@@ -20,6 +23,15 @@ function createApi(options) {
 function Api(options) {
   this._plugins = []
   this._options = extend({}, defaults, options)
+
+  // Support an array of allowedDomains for backwards compatibility
+  if (Array.isArray(this._options.allowedDomains)) {
+    this._options.checkOrigin = function (domain, cb) {
+      if (this._options.allowedDomains.indexOf(domain) === -1) return cb(null, false)
+      return cb(null, true)
+    }.bind(this)
+  }
+
 }
 
 /*

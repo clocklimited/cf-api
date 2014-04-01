@@ -4,17 +4,23 @@ var assert = require('assert')
 describe('middleware/cors unit tests', function () {
 
   it('should pass through if no origin header exists', function (done) {
-    createMiddleware([])({ headers: {} }, {}, done)
+    createMiddleware(function () {
+      assert(false, 'checkOrigin() should not be called when req.headers.origin does not exist')
+    })({ headers: {} }, {}, done)
   })
 
-  it('should send a 403 response to a request with an origin not in the allow list', function (done) {
+  it('should send a 403 response when checkOrigin calls back with false', function (done) {
 
     function mockSend(statusCode) {
       assert.equal(403, statusCode)
       done()
     }
 
-    createMiddleware([])({ headers: { origin: 'bar' } }, { send: mockSend }, function () {
+    function checkOrigin(url, cb) {
+      cb(null, false)
+    }
+
+    createMiddleware(checkOrigin)({ headers: { origin: 'bar' } }, { send: mockSend }, function () {
       assert(false, 'should not call next()')
     })
 
@@ -24,42 +30,21 @@ describe('middleware/cors unit tests', function () {
 
     var allowed = [ 'http://127.0.0.1/' ]
 
+    function checkOrigin(url, cb) {
+      cb(null, allowed.indexOf(url) !== -1)
+    }
+
     function mockSet(headers) {
       assert.deepEqual(
-        { 'Access-Control-Allow-Origin': '*'
+        { 'Access-Control-Allow-Origin': 'http://127.0.0.1/'
         , 'Access-Control-Allow-Headers': 'Authorization, Content-Type, x-cf-date, *'
         , 'Access-Control-Request-Headers': '*'
         , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
         }, headers)
     }
 
-    createMiddleware(allowed)({ headers: { origin: allowed[0] } }, { set: mockSet }, function () {
+    createMiddleware(checkOrigin)({ headers: { origin: allowed[0] } }, { set: mockSet }, function () {
       done()
-    })
-
-  })
-
-  it('should set cache headers on OPTIONS requests', function (done) {
-
-    var allowed = [ 'http://127.0.0.1/' ]
-      , count = 0
-
-    function mockSet(header, value) {
-      if (++count === 2) {
-        assert.equal('Cache-Control', header)
-        assert.equal('max-age=86400', value)
-      }
-    }
-
-    function mockEnd() {
-      done()
-    }
-
-    var req = { headers: { origin: allowed[0] }, method: 'OPTIONS' }
-      , res = { set: mockSet, end: mockEnd }
-
-    createMiddleware(allowed)(req, res, function () {
-      assert(false, 'should not call next()')
     })
 
   })
