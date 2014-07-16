@@ -1,6 +1,7 @@
 module.exports = createApi
 
 var createServer = require('./server')
+  , componentLoader = require('component-loader')
   , extend = require('lodash.assign')
   , defaults =
     { checkOrigin: function (domain, cb) {
@@ -18,10 +19,10 @@ function createApi(options) {
 }
 
 /*
- * API constructor. Instantiates an empty list of plugins.
+ * API constructor. Instantiates an empty list of components.
  */
 function Api(options) {
-  this._plugins = []
+  this._components = []
   this._options = extend({}, defaults, options)
 
   // Support an array of allowedDomains for backwards compatibility
@@ -35,29 +36,34 @@ function Api(options) {
 }
 
 /*
- * Add one or many API plugins.
+ * Add one or many API components.
  */
-Api.prototype.plugins = function (path) {
+Api.prototype.components = function (path) {
   if (!Array.isArray(path)) path = [ path ]
-  this._plugins = this._plugins.concat(path)
+  this._components = this._components.concat(path)
   return this
 }
 
-// Alias plugin/plugins
-Api.prototype.plugin = Api.prototype.plugins
+// Alias component/components
+Api.prototype.component = Api.prototype.components
 
 /*
- * Create the server, initialize all of the plugins
+ * Create the server, initialize all of the components
  * and return the server.
  */
 Api.prototype.initialize = function (serviceLocator, cb) {
   var server = createServer(this._options)
-  try {
-    this._plugins.forEach(function (plugin) {
-      plugin(serviceLocator, server)
-    })
-    cb(null, server)
-  } catch (e) {
-    cb(e)
-  }
+  componentLoader(this._components
+  , function (loadComponentFn) {
+      // if callback only has 2 params, assume it only wants serviceLocator (usually services)
+      if (loadComponentFn.length === 2) {
+        return loadComponentFn.bind(null, serviceLocator)
+      } else {
+        return loadComponentFn.bind(null, serviceLocator, server)
+      }
+    }
+  , function (error) {
+      cb(error, server)
+    }
+  )
 }
