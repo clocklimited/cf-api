@@ -31,7 +31,7 @@ A component is just a node module which exports a function returning a component
 module.exports = init
 
 function init() {
-  { nameOfMyPlugin: [ 'nameOfMyDependency', function (serviceLocator, router, done) {
+  return { nameOfMyPlugin: [ 'nameOfMyDependency', function (serviceLocator, router, done) {
       // do plugin things...
       done()
   } ] }
