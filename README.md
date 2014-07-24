@@ -2,8 +2,8 @@
 
 A pluggable JSON API server
 
-This is CatfishApi but without all of the bloat and a simple API to register plugins.
-Everything becomes a plugin.
+This is CatfishApi but without all of the bloat and a simple API to register components.
+Everything becomes a component.
 
 ## Installation
 
@@ -12,26 +12,29 @@ Everything becomes a plugin.
 ## Usage
 
 ```js
-var serviceLocator = require('service-locator').createServiceLocator()
+var serviceLocator = require('service-locator')()
   , api = require('cf-api')
 
 // Register your services on the serviceLocator here…
 
 api(options)
-  .plugins([ require('./path/to/plugin'), require('./path/to/other/plugin') ])
+  .components([ require('./path/to/component'), require('./path/to/other/component') ])
   .initialize(serviceLocator, function (err, server) {
     if (err) throw err
     server.listen(1337)
   })
 ```
 
-A plugin is just a node module with a single synchronous function exported:
+A component is just a node module which exports a function returning a component definition:
 
 ```js
 module.exports = init
 
-function init(serviceLocator, router) {
-  // Do plugin things…
+function init() {
+  return { nameOfMyPlugin: [ 'nameOfMyDependency', function (serviceLocator, router, done) {
+      // do plugin things...
+      done()
+  } ] }
 }
 ```
 
@@ -46,25 +49,25 @@ Create an API instance. There are two options available:
 
 *For backwards compatibility, the `allowedDomains` option still works and generates a `checkOrigin` function for you.*
 
-### api.plugins(Array: plugins) or api.plugin(Function: plugin)
+### api.components(Array: components) or api.component(Function: component)
 
-Register a list of plugins (or a single plugin). These are not run when they are registered, but when `initialize()`
+Register a list of components (or a single component). These are not run when they are registered, but when `initialize()`
 is called.
 
 Returns `api` for chaining.
 
 ### api.initialize(Object: serviceLocator, Function: cb)
 
-Create the server, initialize all of the plugins and callback with the server. Plugin initialize
-functions are called with the following arguments: `plugin(serviceLocator, router)`.
+Create the server, initialize all of the components and callback with the server. Component initialize
+functions are called with the following arguments: `component(serviceLocator, router)`.
 
-Plugins are initialized in the order that they were passed to `plugin()`.
+Components are initialized according in the order necessicated by their defined dependencies.
 
-`serviceLocator` is a place where your plugins can speak to application level services.
+`serviceLocator` is a place where your components can speak to application level services.
 It could be a plain JS object, but it's better to use something like
 [serby/service-locator](https://github.com/serby/service-locator) to prevent naming clashes.
 
-`cb(err, server)` is called when all plugins have been initialized (`err=null`), or on the first
+`cb(err, server)` is called when all components have been initialized (`err=null`), or on the first
 error (`err!=null`).
 
 ## Changelog
