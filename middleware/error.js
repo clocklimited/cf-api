@@ -11,7 +11,7 @@ function createErrorMiddleware(logger) {
 
   /* jshint unused: false */
   return function errorHandler(error, req, res, next) {
-    res.json({ error: error.message }, error.status || 500)
+    res.status(error.status || 500).json({ error: error.message })
     logger.error('Error occurred while handling request:\n',
       pick(req, 'method', 'url', 'query', 'headers', 'ip', 'ips')
       , '\n' + error.message

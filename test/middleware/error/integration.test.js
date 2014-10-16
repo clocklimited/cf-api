@@ -24,7 +24,6 @@ describe('middleware/error integration tests', function () {
       next(error)
     })
 
-
   })
 
   it('should call logger.err(msg) when next(err) is called', function (done) {

@@ -7,7 +7,7 @@ module.exports = contentTypeMiddleware
 function contentTypeMiddleware(req, res, next) {
   if ([ 'POST', 'PUT', 'PATCH' ].indexOf(req.method) === -1) return next()
   if (isJson(req.headers['content-type'])) return next()
-  res.json({ error: 'API only supports application/json content-type' }, 400)
+  res.status(400).json({ error: 'API only supports application/json content-type' })
 }
 
 /*

@@ -28,23 +28,28 @@ describe('middleware/content-type-json unit tests', function () {
 
   })
 
-
   it('should send a 406 response to a request without a "Content-Type" header', function (done) {
 
-    var i = 0
-    function mockJson(err, statusCode) {
-      assert.equal(400, statusCode)
+    var res = { json: mockJson, status: mockStatus }
+      , i = 0
+
+    function mockJson(err) {
       assert.equal(err.error, 'API only supports application/json content-type')
       if (++i === 3) done()
     }
 
-    middleware({ method: 'POST', headers: {} }, { json: mockJson }, function () {
+    function mockStatus(code) {
+      assert.equal(400, code)
+      return this
+    }
+
+    middleware({ method: 'POST', headers: {} }, res, function () {
       assert(false, 'should not call next()')
     })
-    middleware({ method: 'PUT', headers: {} }, { json: mockJson }, function () {
+    middleware({ method: 'PUT', headers: {} }, res, function () {
       assert(false, 'should not call next()')
     })
-    middleware({ method: 'PATCH', headers: {} }, { json: mockJson }, function () {
+    middleware({ method: 'PATCH', headers: {} }, res, function () {
       assert(false, 'should not call next()')
     })
 
@@ -52,13 +57,19 @@ describe('middleware/content-type-json unit tests', function () {
 
   it('should send a 406 response to a request with a "Content-Type" header that is not json', function (done) {
 
-    function mockJson(err, statusCode) {
-      assert.equal(400, statusCode)
+    var res = { status: mockStatus, json: mockJson }
+
+    function mockJson(err) {
       assert.equal('API only supports application/json content-type', err.error)
       done()
     }
 
-    middleware({ method: 'POST', headers: { 'content-type': 'application/xml' } }, { json: mockJson }, function () {
+    function mockStatus(code) {
+      assert.equal(400, code)
+      return this
+    }
+
+    middleware({ method: 'POST', headers: { 'content-type': 'application/xml' } }, res, function () {
       assert(false, 'should not call next()')
     })
 
