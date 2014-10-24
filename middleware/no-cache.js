@@ -2,8 +2,9 @@ module.exports = noCacheMiddleware
 
 function noCacheMiddleware(req, res, next) {
   res.set(
-    { 'Pragma': 'no-cache'
-    , 'Cache-Control': 'no-cache'
+    { 'Cache-Control': 'max-age=0,no-store,private'
+    , 'Pragma': 'no-cache'
+    , 'Expires': 0
     })
   next()
 }

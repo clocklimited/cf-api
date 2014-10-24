@@ -22,7 +22,8 @@ describe('middleware/no-cache integration tests', function () {
       .end(function (err, res) {
         assert(!err)
         assert.equal('no-cache', res.headers.pragma)
-        assert.equal('no-cache', res.headers['cache-control'])
+        assert.equal('max-age=0,no-store,private', res.headers['cache-control'])
+        assert.equal(0, res.headers.expires)
         assert.equal(200, res.statusCode)
         done()
       })
