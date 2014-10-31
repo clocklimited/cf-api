@@ -2,7 +2,7 @@ module.exports = acceptMiddleware
 
 /*
  * Middleware to ensure the API only talks to
- * clients that accept JSON as a response.
+ * clients that accept JSON or binary as a response.
  */
 function acceptMiddleware(req, res, next) {
 
@@ -16,8 +16,9 @@ function acceptMiddleware(req, res, next) {
   // 'application/json; q=0.8' and trim leading/trailing whitespace
   accepts = accepts.map(function (type) { return type.split(';')[0].trim() })
 
-  // If no existence of 'application/json' in 'Accept: x' header then bye
-  if (accepts.indexOf('application/json') === -1) return res.send(406)
+  // If no existence of 'application/json' and 'application/octet-stream' in 'Accept: x' header then bye
+  if ((accepts.indexOf('application/json') === -1)
+    && (accepts.indexOf('application/octet-stream') === -1)) return res.send(406)
 
   // Otherwise hello!
   next()

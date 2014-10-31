@@ -1,8 +1,8 @@
 var request = require('supertest')
   , express = require('express')
-  , middleware = require('../../../middleware/accept-json')
+  , middleware = require('../../../middleware/accepts')
 
-describe('middleware/accept-json integration tests', function () {
+describe('middleware/accepts integration tests', function () {
 
   var app
 
@@ -45,6 +45,13 @@ describe('middleware/accept-json integration tests', function () {
     request(app)
       .get('/')
       .set('Accept', 'text/plain; q=0.8,application/json; q=0.5')
+      .expect(200, done)
+  })
+
+  it('should delegate to the route handler if application/octet-stream exists in the "Accept" header', function (done) {
+    request(app)
+      .get('/')
+      .set('Accept', 'application/octet-stream')
       .expect(200, done)
   })
 
