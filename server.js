@@ -4,7 +4,7 @@ var express = require('express')
   , logger = require('./middleware/logger')
   , tag = require('./middleware/tag')
   , cors = require('./middleware/cors')
-  , acceptJson = require('./middleware/accept-json')
+  , accepts = require('./middleware/accepts')
   , contentTypeJson = require('./middleware/content-type-json')
   , cors = require('./middleware/cors')
   , errorHandler = require('./middleware/error')
@@ -20,7 +20,6 @@ function createServer(options) {
   // it's sitting behind a proxy and that the X-Forwarded-* header fields may be
   // trusted, which otherwise may be easily spoofed.
   app.enable('trust proxy')
-
 
   // Attach middleware
 
@@ -42,7 +41,7 @@ function createServer(options) {
     .use(express.json())
 
     // Server only speaks JSON
-    .use(acceptJson)
+    .use(accepts)
     .use(contentTypeJson)
 
     // Set headers to prevent caching

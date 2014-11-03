@@ -1,7 +1,7 @@
 var assert = require('assert')
-  , middleware = require('../../../middleware/accept-json')
+  , middleware = require('../../../middleware/accepts')
 
-describe('middleware/accept-json unit tests', function () {
+describe('middleware/accepts unit tests', function () {
 
   it('should send a 406 response to a request with no "Accept"', function (done) {
     function mockSend(statusCode) {
@@ -23,6 +23,13 @@ describe('middleware/accept-json unit tests', function () {
 
   it('should be ok with "application/json; q=0.8" in "Accept" header', function (done) {
     middleware({ headers: { accept: 'jim,application/json; q=0.8,text/html,text/plain' } }, {}, function () {
+      done()
+    })
+  })
+
+  it('should be ok with "application/application/octet-stream; q=0.8" in "Accept" header', function (done) {
+    middleware({ headers:
+      { accept: 'jim,application/octet-stream; q=0.8,text/html,text/plain' } }, {}, function () {
       done()
     })
   })
