@@ -69,6 +69,9 @@ error (`err!=null`).
 
 ## Changelog
 
+### 1.1.0
+- API now allows binary request bodies as well as json
+
 ### 1.0.1
 - Fixed cors middleware not terminating preflight requests. Do not use 1.0.0, please upgrade.
 
