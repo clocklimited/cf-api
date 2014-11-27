@@ -12,6 +12,7 @@ function createCorsMiddleware(checkDomain) {
 
       // Check if this client should be served
       checkDomain(req.headers.origin, function (err, allowed) {
+        if (err) return next(err)
 
         if (!allowed) return res.send(403)
 
