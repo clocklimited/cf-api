@@ -9,20 +9,20 @@ describe('middleware/cors unit tests', function () {
     })({ headers: {} }, {}, done)
   })
 
-    it('should call next() with error when checkOrigin returns an error', function (done) {
+  it('should call next() with error when checkOrigin returns an error', function (done) {
 
-      var msg = 'Error from check origin'
+    var msg = 'Error from check origin'
 
-      function checkOrigin(url, cb) {
-        cb(new Error(msg))
-      }
+    function checkOrigin(url, cb) {
+      cb(new Error(msg))
+    }
 
-      createMiddleware(checkOrigin)({ headers: { origin: 'bar' } }, {}, function (err) {
-        assert.equal(err.message, msg)
-        done()
-      })
-
+    createMiddleware(checkOrigin)({ headers: { origin: 'bar' } }, {}, function (err) {
+      assert.equal(err.message, msg)
+      done()
     })
+
+  })
 
   it('should send a 403 response when checkOrigin calls back with false', function (done) {
 
