@@ -42,7 +42,7 @@ function createServer(options) {
 
     // Server only speaks JSON
     .use(accepts)
-    .use(contentType([ 'application/json', 'application/csv' ]))
+    .use(contentType([ 'application/json', 'text/csv' ]))
 
     // Set headers to prevent caching
     .use(noCache)
