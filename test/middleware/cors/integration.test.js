@@ -39,4 +39,13 @@ describe('middleware/cors integration tests', function () {
       .expect(200, done)
   })
 
+  it.only('should send ‘content-length: 0’ for OPTION requests', function (done) {
+    request(app)
+      .options('/')
+      .set('Origin', 'http://127.0.0.1/')
+      .expect('Content-Length', '0')
+      .expect(200)
+      .end(done)
+  })
+
 })

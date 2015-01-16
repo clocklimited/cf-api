@@ -25,7 +25,10 @@ function createCorsMiddleware(checkDomain) {
           })
 
         // Don't call next() if this is a preflight CORS check
-        if (req.method === 'OPTIONS') return res.end()
+        if (req.method === 'OPTIONS') {
+          res.set('Content-Length', 0)
+          return res.end()
+        }
 
         next()
 
