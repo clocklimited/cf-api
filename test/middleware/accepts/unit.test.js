@@ -35,7 +35,19 @@ describe('middleware/accepts unit tests', function () {
   })
 
   it('should be ok with trailing/leading spaces in "Accept" header', function (done) {
-    middleware({ headers: { accept: 'application/json , text/html ,text/plain,*/*' } }, {}, function () {
+    middleware({ headers: { accept: 'application/json , text/html ,text/plain' } }, {}, function () {
+      done()
+    })
+  })
+
+  it('should correct negotiate partial wildcards in "Accept" header', function (done) {
+    middleware({ headers: { accept: 'application/*' } }, {}, function () {
+      done()
+    })
+  })
+
+  it('should correct negotiate fill wildcard in "Accept" header', function (done) {
+    middleware({ headers: { accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' } }, {}, function () {
       done()
     })
   })
@@ -45,7 +57,7 @@ describe('middleware/accepts unit tests', function () {
       assert.equal(statusCode, 406)
       done()
     }
-    var accept = 'crapplication/json , text/html ,text/plain,*/*'
+    var accept = 'crapplication/json , text/html'
     middleware({ headers: { accept: accept } }, { send: mockSend }, function () {
       assert(false, 'should not call next()')
     })

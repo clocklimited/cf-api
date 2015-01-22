@@ -18,7 +18,9 @@ function acceptMiddleware(req, res, next) {
 
   // If no existence of 'application/json' and 'application/octet-stream' in 'Accept: x' header then bye
   if ((accepts.indexOf('application/json') === -1)
-    && (accepts.indexOf('application/octet-stream') === -1)) return res.send(406)
+    && (accepts.indexOf('application/octet-stream') === -1)
+    && (accepts.indexOf('application/*') === -1)
+    && (accepts.indexOf('*/*') === -1) ) return res.send(406)
 
   // Otherwise hello!
   next()
