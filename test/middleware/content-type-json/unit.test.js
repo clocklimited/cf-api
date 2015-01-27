@@ -1,7 +1,7 @@
 var assert = require('assert')
-  , middleware = require('../../../middleware/content-type-json')
+  , middleware = require('../../../middleware/content-type')([ 'application/json', 'application/csv' ])
 
-describe('middleware/content-type-json unit tests', function () {
+describe('middleware/content-type unit tests', function () {
 
   it('should pass through on non PUT/POST/PATCH requests', function (done) {
 
@@ -34,7 +34,7 @@ describe('middleware/content-type-json unit tests', function () {
       , i = 0
 
     function mockJson(err) {
-      assert.equal(err.error, 'API only supports application/json content-type')
+      assert.equal(err.error, 'API requires a content-type')
       if (++i === 3) done()
     }
 
@@ -55,12 +55,12 @@ describe('middleware/content-type-json unit tests', function () {
 
   })
 
-  it('should send a 406 response to a request with a "Content-Type" header that is not json', function (done) {
+  it('should send a 406 response to a request with a "Content-Type" header that is not valid', function (done) {
 
     var res = { status: mockStatus, json: mockJson }
 
     function mockJson(err) {
-      assert.equal('API only supports application/json content-type', err.error)
+      assert.equal('API does not support application/xml content-type', err.error)
       done()
     }
 
@@ -89,6 +89,12 @@ describe('middleware/content-type-json unit tests', function () {
 
   it('should be ok with the arbitrary parameters in the "Content-Type" header', function (done) {
     middleware({ method: 'POST', headers: { 'content-type': 'application/json; foo=bar' } }, {}, function () {
+      done()
+    })
+  })
+
+  it('should be ok with a content-type that is not json', function (done) {
+    middleware({ method: 'POST', headers: { 'content-type': 'application/csv' } }, {}, function () {
       done()
     })
   })

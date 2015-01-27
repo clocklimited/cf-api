@@ -1,8 +1,8 @@
 var request = require('supertest')
   , express = require('express')
-  , middleware = require('../../../middleware/content-type-json')
+  , middleware = require('../../../middleware/content-type')([ 'application/json', 'application/csv' ])
 
-describe('middleware/content-type-json integration tests', function () {
+describe('middleware/content-type integration tests', function () {
 
   var app
 
@@ -32,14 +32,16 @@ describe('middleware/content-type-json integration tests', function () {
       .expect(200, done)
   })
 
-  it('should send a 400 response to a request without json in the "Content-Type" header', function (done) {
+  it('should send a 400 response to a request without an allowed content-type in the "Content-Type" header'
+  , function (done) {
     request(app)
       .post('/')
       .set('Content-Type', 'text/plain')
       .expect(400, done)
   })
 
-  it('should send a 200 response to a request with json in the "Content-Type" header', function (done) {
+  it('should send a 200 response to a request with an allowed content-type in the "Content-Type" header'
+  , function (done) {
     request(app)
       .post('/')
       .set('Content-Type', 'application/json')
