@@ -9,6 +9,7 @@ function contentTypeMiddleware(types) {
   function middleware(req, res, next) {
     if ([ 'POST', 'PUT', 'PATCH' ].indexOf(req.method) === -1) return next()
     if (isValidType(req.headers['content-type'])) return next()
+    if (!req.headers['content-type']) return res.status(400).json({ error: 'API requires a content-type' })
     res.status(400).json({ error: 'API does not support ' + req.headers['content-type'] + ' content-type' })
   }
 
@@ -25,11 +26,7 @@ function contentTypeMiddleware(types) {
     // split on the ';' and trim any whitespace before comparing.
     var contentType = contentTypeHeader.split(';')[0].trim()
 
-    if (types.indexOf(contentType) === -1) {
-      return false
-    }
-
-    return true
+    return types.indexOf(contentType) !== -1
   }
 
   return middleware

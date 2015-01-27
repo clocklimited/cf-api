@@ -34,7 +34,7 @@ describe('middleware/content-type unit tests', function () {
       , i = 0
 
     function mockJson(err) {
-      assert.equal(err.error, 'API does not support undefined content-type')
+      assert.equal(err.error, 'API requires a content-type')
       if (++i === 3) done()
     }
 
