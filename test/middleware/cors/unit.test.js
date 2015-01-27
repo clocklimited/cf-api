@@ -86,33 +86,33 @@ describe('middleware/cors unit tests', function () {
         })
   })
 
-    it('should OPTIONS set ‘content-length: 0’ for OPTIONS method', function (done) {
+  it('should OPTIONS set ‘content-length: 0’ for OPTIONS method', function (done) {
 
-      var headers = {}
-        , allowed = [ 'http://127.0.0.1/' ]
+    var headers = {}
+      , allowed = [ 'http://127.0.0.1/' ]
 
-      function checkOrigin(url, cb) {
-        cb(null, true)
-      }
+    function checkOrigin(url, cb) {
+      cb(null, true)
+    }
 
-      function mockEnd() {
-        assert.equal(headers['Content-Length'], 0)
-        done()
-      }
+    function mockEnd() {
+      assert.equal(headers['Content-Length'], 0)
+      done()
+    }
 
-      createMiddleware(checkOrigin)(
-          { headers: { origin: allowed[0] }
-          , method: 'OPTIONS'
-          }
-        , { end: mockEnd
-          , set: function(key, value) {
-              if (typeof key === 'object') {
-                extend(headers, key)
-              } else {
-                headers[key] = value
-              }
+    createMiddleware(checkOrigin)(
+        { headers: { origin: allowed[0] }
+        , method: 'OPTIONS'
+        }
+      , { end: mockEnd
+        , set: function(key, value) {
+            if (typeof key === 'object') {
+              extend(headers, key)
+            } else {
+              headers[key] = value
             }
-          })
-    })
+          }
+        })
+  })
 
 })
