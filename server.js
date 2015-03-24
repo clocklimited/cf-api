@@ -5,7 +5,7 @@ var express = require('express')
   , tag = require('./middleware/tag')
   , cors = require('./middleware/cors')
   , accepts = require('./middleware/accepts')
-  , contentTypeJson = require('./middleware/content-type-json')
+  , contentType = require('./middleware/content-type')
   , cors = require('./middleware/cors')
   , errorHandler = require('./middleware/error')
   , noCache = require('./middleware/no-cache')
@@ -42,7 +42,7 @@ function createServer(options) {
 
     // Server only speaks JSON
     .use(accepts)
-    .use(contentTypeJson)
+    .use(contentType([ 'application/json', 'text/csv' ]))
 
     // Set headers to prevent caching
     .use(noCache)
