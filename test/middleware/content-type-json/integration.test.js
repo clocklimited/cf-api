@@ -10,7 +10,7 @@ describe('middleware/content-type integration tests', function () {
     app = express()
     app.use(middleware)
     app.all('/', function (req, res) {
-      res.send(200)
+      res.status(200).end()
     })
   })
 

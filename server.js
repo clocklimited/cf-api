@@ -9,6 +9,8 @@ var express = require('express')
   , cors = require('./middleware/cors')
   , errorHandler = require('./middleware/error')
   , noCache = require('./middleware/no-cache')
+  , responseTime = require('response-time')
+  , bodyParser = require('body-parser')
 
 function createServer(options) {
 
@@ -32,13 +34,13 @@ function createServer(options) {
     .use(tag)
 
     // X-Response-time: Nms
-    .use(express.responseTime())
+    .use(responseTime())
 
     // Whitelist cross domain requests
     .use(cors(options.checkOrigin))
 
     // Body parse API for JSON content type
-    .use(express.json())
+    .use(bodyParser.json())
 
     // Server only speaks JSON
     .use(accepts)
@@ -46,9 +48,6 @@ function createServer(options) {
 
     // Set headers to prevent caching
     .use(noCache)
-
-    // Be explicit about where in the stack routes handlers are positioned
-    .use(app.router)
 
     // Handle and log server error
     .use(errorHandler(options.logger))

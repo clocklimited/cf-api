@@ -2,6 +2,8 @@ var assert = require('assert')
   , createMiddleware = require('../../../middleware/cors')
   , extend = require('lodash.assign')
 
+function noop() {}
+
 describe('middleware/cors unit tests', function () {
 
   it('should pass through if no origin header exists', function (done) {
@@ -27,16 +29,17 @@ describe('middleware/cors unit tests', function () {
 
   it('should send a 403 response when checkOrigin calls back with false', function (done) {
 
-    function mockSend(statusCode) {
+    function mockStatus(statusCode) {
       assert.equal(403, statusCode)
       done()
+      return { end: noop }
     }
 
     function checkOrigin(url, cb) {
       cb(null, false)
     }
 
-    createMiddleware(checkOrigin)({ headers: { origin: 'bar' } }, { send: mockSend }, function () {
+    createMiddleware(checkOrigin)({ headers: { origin: 'bar' } }, { status: mockStatus}, function () {
       assert(false, 'should not call next()')
     })
 

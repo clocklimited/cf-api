@@ -12,7 +12,7 @@ describe('middleware/logger integration tests', function () {
     app = express()
     app.use(createMiddleware(logger))
     app.get('/', function (req, res) {
-      res.send(200)
+      res.status(200).end()
     })
   })
 

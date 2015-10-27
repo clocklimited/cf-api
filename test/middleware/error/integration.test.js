@@ -11,9 +11,6 @@ describe('middleware/error integration tests', function () {
   before(function () {
     app = express()
 
-    app.use(app.router)
-    app.use(createMiddleware(logger))
-
     app.get('/', function (req, res, next) {
       next(new Error('Test error'))
     })
@@ -24,6 +21,7 @@ describe('middleware/error integration tests', function () {
       next(error)
     })
 
+    app.use(createMiddleware(logger))
   })
 
   it('should call logger.err(msg) when next(err) is called', function (done) {

@@ -12,27 +12,19 @@ Everything becomes a plugin.
 ## Usage
 
 ```js
-var serviceLocator = require('service-locator').createServiceLocator()
-  , api = require('cf-api')
+var createApi = require('cf-api')
 
-// Register your services on the serviceLocator here…
+var api = createApi(options)
+  server = api.initialize()
 
-api(options)
-  .plugins([ require('./path/to/plugin'), require('./path/to/other/plugin') ])
-  .initialize(serviceLocator, function (err, server) {
-    if (err) throw err
-    server.listen(1337)
-  })
-```
+server.get('/', homepage)
+server.post('/form', submit)
 
-A plugin is just a node module with a single synchronous function exported:
+// This tells the api that you've finised adding your routes
+// and you now want it to add the error handling middleware
+server.emit('preBoot')
 
-```js
-module.exports = init
-
-function init(serviceLocator, router) {
-  // Do plugin things…
-}
+server.listen(port)
 ```
 
 ## API API
@@ -46,28 +38,15 @@ Create an API instance. There are two options available:
 
 *For backwards compatibility, the `allowedDomains` option still works and generates a `checkOrigin` function for you.*
 
-### api.plugins(Array: plugins) or api.plugin(Function: plugin)
+### api.initialize()
 
-Register a list of plugins (or a single plugin). These are not run when they are registered, but when `initialize()`
-is called.
-
-Returns `api` for chaining.
-
-### api.initialize(Object: serviceLocator, Function: cb)
-
-Create the server, initialize all of the plugins and callback with the server. Plugin initialize
-functions are called with the following arguments: `plugin(serviceLocator, router)`.
-
-Plugins are initialized in the order that they were passed to `plugin()`.
-
-`serviceLocator` is a place where your plugins can speak to application level services.
-It could be a plain JS object, but it's better to use something like
-[serby/service-locator](https://github.com/serby/service-locator) to prevent naming clashes.
-
-`cb(err, server)` is called when all plugins have been initialized (`err=null`), or on the first
-error (`err!=null`).
+Create and return the server.
 
 ## Changelog
+
+### 2.0.0
+- Plugin interface now totally removed. Application components are registered outside of the scope of this module.
+- User must call `server.emit('preBoot')` after all routes have been added to make tell the api to add the last piece of middleware: the error handler. This is due to a change in Express 4.
 
 ### 1.1.0
 - API now allows binary request bodies as well as json

@@ -18,10 +18,9 @@ function createApi(options) {
 }
 
 /*
- * API constructor. Instantiates an empty list of plugins.
+ * API constructor.
  */
 function Api(options) {
-  this._plugins = []
   this._options = extend({}, defaults, options)
 
   // Support an array of allowedDomains for backwards compatibility
@@ -35,29 +34,8 @@ function Api(options) {
 }
 
 /*
- * Add one or many API plugins.
+ * Create and return the server.
  */
-Api.prototype.plugins = function (path) {
-  if (!Array.isArray(path)) path = [ path ]
-  this._plugins = this._plugins.concat(path)
-  return this
-}
-
-// Alias plugin/plugins
-Api.prototype.plugin = Api.prototype.plugins
-
-/*
- * Create the server, initialize all of the plugins
- * and return the server.
- */
-Api.prototype.initialize = function (serviceLocator, cb) {
-  var server = createServer(this._options)
-  try {
-    this._plugins.forEach(function (plugin) {
-      plugin(serviceLocator, server)
-    })
-    cb(null, server)
-  } catch (e) {
-    cb(e)
-  }
+Api.prototype.initialize = function () {
+  return createServer(this._options)
 }

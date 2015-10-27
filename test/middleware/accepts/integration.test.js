@@ -10,7 +10,7 @@ describe('middleware/accepts integration tests', function () {
     app = express()
     app.use(middleware)
     app.get('/', function (req, res) {
-      res.send(200)
+      res.status(200).end()
     })
   })
 

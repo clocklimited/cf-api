@@ -7,7 +7,7 @@ module.exports = acceptMiddleware
 function acceptMiddleware(req, res, next) {
 
   // If no 'Accept: x' header then bye
-  if (!req.headers.accept) return res.send(406)
+  if (!req.headers.accept) return res.status(406).end()
 
   // Get the list of acceptable response types
   var accepts = req.headers.accept.split(',')
@@ -20,7 +20,7 @@ function acceptMiddleware(req, res, next) {
   if ((accepts.indexOf('application/json') === -1)
     && (accepts.indexOf('application/octet-stream') === -1)
     && (accepts.indexOf('application/*') === -1)
-    && (accepts.indexOf('*/*') === -1) ) return res.send(406)
+    && (accepts.indexOf('*/*') === -1) ) return res.status(406).end()
 
   // Otherwise hello!
   next()
