@@ -11,7 +11,7 @@ describe('middleware/no-cache integration tests', function () {
     app = express()
     app.use(middleware)
     app.get('/', function (req, res) {
-      res.status(200).end()
+      res.sendStatus(200)
     })
   })
 

@@ -1,27 +1,23 @@
 var assert = require('assert')
   , middleware = require('../../../middleware/accepts')
 
-function noop() {}
-
 describe('middleware/accepts unit tests', function () {
 
   it('should send a 406 response to a request with no "Accept"', function (done) {
     function mockStatus(statusCode) {
       assert.equal(406, statusCode)
       done()
-      return { end: noop }
     }
-    middleware({ headers: {} }, { status: mockStatus })
+    middleware({ headers: {} }, { sendStatus: mockStatus })
   })
 
   it('should send a 406 response to a request without json in "Accept" header', function (done) {
     function mockStatus(statusCode) {
       assert.equal(406, statusCode)
       done()
-      return { end: noop }
     }
     var headers = { accept: 'jim,application/jsin,text/html,text/plain' }
-    middleware({ headers: headers }, { status: mockStatus }, function () {
+    middleware({ headers: headers }, { sendStatus: mockStatus }, function () {
       assert(false, 'should not call next()')
     })
   })
@@ -64,10 +60,9 @@ describe('middleware/accepts unit tests', function () {
     function mockStatus(statusCode) {
       assert.equal(406, statusCode)
       done()
-      return { end: noop }
     }
     var accept = 'crapplication/json , text/html'
-    middleware({ headers: { accept: accept } }, { status: mockStatus }, function () {
+    middleware({ headers: { accept: accept } }, { sendStatus: mockStatus }, function () {
       assert(false, 'should not call next()')
     })
   })

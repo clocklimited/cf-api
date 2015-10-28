@@ -14,7 +14,7 @@ function createCorsMiddleware(checkDomain) {
       checkDomain(req.headers.origin, function (err, allowed) {
         if (err) return next(err)
 
-        if (!allowed) return res.status(403).end()
+        if (!allowed) return res.sendStatus(403)
 
         // Request came from allowed domain so set acces control headers
         res.set(

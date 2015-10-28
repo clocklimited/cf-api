@@ -15,7 +15,7 @@ describe('middleware/cors integration tests', function () {
     app = express()
     app.use(createMiddleware(checkOrigin))
     app.all('/', function (req, res) {
-      res.status(200).end()
+      res.sendStatus(200)
     })
   })
 
