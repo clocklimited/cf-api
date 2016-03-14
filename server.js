@@ -49,8 +49,12 @@ function createServer(options) {
     // Set headers to prevent caching
     .use(noCache)
 
+  // Allow routes to be added before the error handler.
+  // When routes have finished being added `.emit('preBoot')`
+  app.on('preBoot', function () {
     // Handle and log server error
-    .use(errorHandler(options.logger))
+    app.use(errorHandler(options.logger))
+  })
 
   return app
 
