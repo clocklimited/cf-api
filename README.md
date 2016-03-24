@@ -34,7 +34,8 @@ server.listen(port)
 Create an API instance. There are two options available:
 
 - `checkOrigin` - a function with the signature `function (url, cb) {}` to check `req.headers.origin`. `cb(null, true)` to allow and `origin`, `cb(null, false)` to deny an origin. Defaults to `cb(null, true)` for all requests, meaning all cross-domain requests are allowed. It is up to the user to implement their whitelist/blacklist.
-- `logger` - a logger object with methods `debug()`, `info()`, `warn()` and `error()` (default: `console`)
+- `logger` - a logger object with methods `debug()`, `info()`, `warn()` and `error()` (default: `console`).
+- `maxBodySize` - an option to be passed along to the [body-parser json middleware](https://github.com/expressjs/body-parser#limit) function. If this is a number it will be the number of bytes, otherwise it will be parsed by the [bytes module](https://github.com/visionmedia/bytes.js) (default: `undefined` which falls back to the body parser default of `'100kB'`).
 
 *For backwards compatibility, the `allowedDomains` option still works and generates a `checkOrigin` function for you.*
 

@@ -16,7 +16,7 @@ describe('server', function () {
       .expect(404, done)
   })
 
-  it('should 413 when maxBodySize is set to 1b', function(done){
+  it('should send a 413 response when request body is larger than `opts.maxBodySize`', function (done) {
     var buf = new Buffer(2)
       , app = createServer({ maxBodySize: '1b', logger: noopLogger, properties: { allowedDomains: [] } })
 
@@ -31,7 +31,7 @@ describe('server', function () {
     .expect(413, done)
   })
 
-  it('should 200 when maxBodySize is set to 100b', function(done){
+  it('should send a 200 response when request body is smaller than `opts.maxBodySize`', function (done) {
     var buf = new Buffer(2)
       , app = createServer({ maxBodySize: '100b', logger: noopLogger, properties: { allowedDomains: [] } })
 
