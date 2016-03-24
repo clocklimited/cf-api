@@ -8,6 +8,7 @@ var createServer = require('./server')
         cb(null, true)
       }
     , logger: console
+    , maxBodySize: '100kb'
     }
 
 /*

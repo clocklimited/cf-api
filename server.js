@@ -40,7 +40,7 @@ function createServer(options) {
     .use(cors(options.checkOrigin))
 
     // Body parse API for JSON content type
-    .use(bodyParser.json())
+    .use(bodyParser.json({ limit: options.maxBodySize }))
 
     // Server only speaks JSON
     .use(accepts)
