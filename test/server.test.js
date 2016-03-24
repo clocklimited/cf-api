@@ -14,7 +14,38 @@ describe('server', function () {
       .get('/')
       .set('Accept', 'application/json')
       .expect(404, done)
+  })
 
+  it('should 413 when maxBodySize is set to 1b', function(done){
+    var buf = new Buffer(2)
+      , app = createServer({ maxBodySize: '1b', logger: noopLogger, properties: { allowedDomains: [] } })
+
+    buf.fill('.')
+
+    request(app)
+    .post('/')
+    .set('Accept', 'application/json')
+    .set('Content-Type', 'application/json')
+    .set('Content-Length', '12')
+    .send(JSON.stringify({ str: buf.toString() }))
+    .expect(413, done)
+  })
+
+  it('should 200 when maxBodySize is set to 100b', function(done){
+    var buf = new Buffer(2)
+      , app = createServer({ maxBodySize: '100b', logger: noopLogger, properties: { allowedDomains: [] } })
+
+    app.post('/test', function (req, res) { res.end() })
+
+    buf.fill('.')
+
+    request(app)
+    .post('/test')
+    .set('Accept', 'application/json')
+    .set('Content-Type', 'application/json')
+    .set('Content-Length', '12')
+    .send(JSON.stringify({ str: buf.toString() }))
+    .expect(200, done)
   })
 
   it('shouldn’t add error middleware until "preBoot" event is emitted', function (done) {
