@@ -10,7 +10,7 @@
     "url": "git@github.com:clocklimited/cf-api"
   },
   "publishConfig": {
-    "registry": "http://npm.clockte.ch"
+    "registry": "http://registry.npmjs.org"
   },
   "main": "api.js",
   "scripts": {
