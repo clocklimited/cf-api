@@ -99,4 +99,15 @@ describe('middleware/content-type unit tests', function () {
     })
   })
 
+  it('should return an 400 error for unknown content types', function (done) {
+    var res = { status: function (code) {
+      assert(code, 400)
+      return { json: function (content) {
+          assert(content.error, 'API does not support image/jpeg content-type')
+          done()
+        }
+      }
+    }}
+    middleware({ method: 'POST', headers: { 'content-type': 'image/jpeg' } }, res)
+  })
 })
