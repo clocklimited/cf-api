@@ -15,6 +15,7 @@ var express = require('express')
 function createServer(options) {
 
   var app = express()
+    , contentTypes = options.contentTypes || [ 'application/json', 'text/csv' ]
 
   // Using Express behind a reverse proxy such as Varnish or Nginx is trivial,
   // however it does require configuration. By enabling the "trust proxy"
@@ -44,7 +45,7 @@ function createServer(options) {
 
     // Server only speaks JSON
     .use(accepts)
-    .use(contentType([ 'application/json', 'text/csv' ]))
+    .use(contentType(contentTypes))
 
     // Set headers to prevent caching
     .use(noCache)
