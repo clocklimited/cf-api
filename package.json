@@ -2,7 +2,7 @@
   "author": "Ben Gourley",
   "name": "cf-api",
   "description": "A pluggable JSON API server",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "tags": [],
   "license": "ISC",
   "repository": {
