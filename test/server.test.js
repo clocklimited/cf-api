@@ -91,4 +91,30 @@ describe('server', function () {
         })
   })
 
+  it('should add any initial middleware, if defined', function (done) {
+    var middlewareCalled = false
+      , middleware = function (req, res, next) {
+        middlewareCalled = true
+        next()
+      }
+      , app = createServer(
+        { logger: noopLogger
+        , properties: { allowedDomains: [] }
+        , initialMiddleware: middleware
+        })
+
+    app.post('/test', function (req, res) { res.end() })
+
+    request(app)
+    .post('/test')
+    .set('Accept', 'application/json')
+    .set('Content-Type', 'application/json')
+    .send(JSON.stringify({ test: 'test' }) )
+    .expect(200, function (err) {
+        if (err) return done(err)
+        assert.equal(middlewareCalled, true)
+        done()
+      })
+  })
+
 })

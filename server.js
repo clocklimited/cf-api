@@ -26,6 +26,8 @@ function createServer(options) {
 
   // Attach middleware
 
+  if (options.initialMiddleware) app.use(options.initialMiddleware)
+
   app
 
     // Wire up the express logger to the app logger
