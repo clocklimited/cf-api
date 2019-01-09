@@ -14,10 +14,10 @@ describe('middleware/accepts integration tests', function () {
     })
   })
 
-  it('should send a 406 response to a request with no "Accept"', function (done) {
+  it('should assume a `*/*` "Accept" header to a request with no "Accept"', function (done) {
     request(app)
       .get('/')
-      .expect(406, done)
+      .expect(200, done)
   })
 
   it('should delegate to the route handler if json exists in the "Accept" header', function (done) {

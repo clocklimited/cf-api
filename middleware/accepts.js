@@ -6,8 +6,8 @@ module.exports = acceptMiddleware
  */
 function acceptMiddleware(req, res, next) {
 
-  // If no 'Accept: x' header then bye
-  if (!req.headers.accept) return res.sendStatus(406)
+  // If no 'Accept: x' header assume anything is allowed
+  if (!req.headers.accept) req.headers.accept = '*/*'
 
   // Get the list of acceptable response types
   var accepts = req.headers.accept.split(',')
