@@ -1,5 +1,7 @@
 # cf-api
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/clocklimited/cf-api.svg)](https://greenkeeper.io/)
+
 A pluggable JSON API server
 
 This is CatfishApi but without all of the bloat and a simple API to register plugins.
