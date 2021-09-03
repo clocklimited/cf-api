@@ -1,4 +1,5 @@
 var request = require('supertest')
+  , assert = require('assert')
   , express = require('express')
   , createMiddleware = require('../../../middleware/cors')
 
@@ -48,4 +49,34 @@ describe('middleware/cors integration tests', function () {
       .end(done)
   })
 
+  it('should not add expose header if options are not set', function (done) {
+    request(app)
+      .options('/')
+      .set('Origin', 'http://127.0.0.1/')
+      .expect(200)
+      .end(function (error, req) {
+        if (error) return done(error)
+        assert.strictEqual(req.headers['Access-Control-Expose-Headers'], undefined)
+        done()
+      })
+  })
+
+  it('should add expose header if options set', function (done) {
+    var appWithOptions = express()
+    appWithOptions.use(createMiddleware(
+      checkOrigin,
+      {
+        exposeHeaders: 'Filename'
+      }
+    ))
+    appWithOptions.all('/', function (req, res) {
+      res.sendStatus(200)
+    })
+    request(appWithOptions)
+      .options('/')
+      .set('Origin', 'http://127.0.0.1/')
+      .expect('Access-Control-Expose-Headers', 'Filename')
+      .expect(200)
+      .end(done)
+  })
 })
