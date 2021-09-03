@@ -1,6 +1,6 @@
 {
   "author": "Ben Gourley",
-  "name": "cf-api",
+  "name": "@clocklimited/cf-api",
   "description": "A pluggable JSON API server",
   "version": "2.5.0",
   "tags": [],
@@ -9,9 +9,7 @@
     "type": "git",
     "url": "git@github.com:clocklimited/cf-api"
   },
-  "publishConfig": {
-    "registry": "http://registry.npmjs.org"
-  },
+  "homepage": "https://github.com/clocklimited/cf-api",
   "main": "api.js",
   "scripts": {
     "lint": "jshint . --reporter=./node_modules/jshint-full-path/index.js",
