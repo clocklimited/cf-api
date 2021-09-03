@@ -65,6 +65,34 @@ describe('middleware/cors unit tests', function () {
 
   })
 
+  it(
+    'should set the correct response headers for a request with an origin in the allow list with additional options'
+  , function (done) {
+
+    var allowed = [ 'http://127.0.0.1/' ]
+
+    function checkOrigin(url, cb) {
+      cb(null, allowed.indexOf(url) !== -1)
+    }
+
+    function mockSet(headers) {
+      assert.deepEqual(
+        { 'Access-Control-Allow-Origin': 'http://127.0.0.1/'
+        , 'Access-Control-Allow-Headers': 'Authorization, Content-Type, x-cf-date, x-cf-ttl, *'
+        , 'Access-Control-Request-Headers': '*'
+        , 'Access-Control-Expose-Headers': 'Filename'
+        , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
+        }, headers)
+    }
+
+  createMiddleware(
+    checkOrigin
+  , { exposeHeaders: 'Filename'})({ headers: { origin: allowed[0] } }, { set: mockSet }, function () {
+      done()
+    })
+
+  })
+
   it('should not call next() if req.method is OPTIONS', function (done) {
 
     var allowed = [ 'http://127.0.0.1/' ]

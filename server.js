@@ -3,7 +3,6 @@ module.exports = createServer
 var express = require('express')
   , logger = require('./middleware/logger')
   , tag = require('./middleware/tag')
-  , cors = require('./middleware/cors')
   , accepts = require('./middleware/accepts')
   , contentType = require('./middleware/content-type')
   , cors = require('./middleware/cors')
@@ -40,7 +39,7 @@ function createServer(options) {
     .use(responseTime())
 
     // Whitelist cross domain requests
-    .use(cors(options.checkOrigin))
+    .use(cors(options.checkOrigin, options.corsOptions))
 
     // Body parse API for JSON content type
     .use(bodyParser.json({ limit: options.maxBodySize }))
