@@ -48,6 +48,9 @@ Create and return the server.
 
 ## Changelog
 
+### 3.0.0
+- `express` is now installed as a peer dependency
+
 ### 2.6.0
 - Allow setting cors options through initialisation options.
 

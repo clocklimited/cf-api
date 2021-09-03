@@ -24,7 +24,6 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "express": "^4.14.0",
     "lodash.assign": "^4.2.0",
     "lodash.pick": "^4.4.0",
     "morgan": "^1.7.0",
@@ -37,5 +36,8 @@
     "mocha": "^3.1.2",
     "should": "2",
     "supertest": "^2.0.1"
+  },
+  "peerDependencies": {
+    "express": "~4"
   }
 }
