@@ -10,6 +10,9 @@ var createServer = require('./server')
     , logger: console
     , maxBodySize: '100kb'
     , initialMiddleware: null
+    , corsOptions:
+      { exposeHeaders: ''
+      }
     }
 
 /*
