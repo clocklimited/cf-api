@@ -48,6 +48,9 @@ Create and return the server.
 
 ## Changelog
 
+### 2.6.0
+- Allow setting cors options through initialisation options.
+
 ### 2.0.0
 - Plugin interface now totally removed. Application components are registered outside of the scope of this module.
 - User must call `server.emit('preBoot')` after all routes have been added to make tell the api to add the last piece of middleware: the error handler. This is due to a change in Express 4.
