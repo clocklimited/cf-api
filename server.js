@@ -1,5 +1,8 @@
 module.exports = createServer
 
+const responseTime = require('response-time');
+const { json } = require('body-parser');
+
 var express = require('express')
   , logger = require('./middleware/logger')
   , tag = require('./middleware/tag')
@@ -32,13 +35,13 @@ function createServer(options) {
     .use(tag)
 
     // X-Response-time: Nms
-    .use(express.responseTime())
+    .use(responseTime())
 
     // Whitelist cross domain requests
     .use(cors(options.checkOrigin))
 
     // Body parse API for JSON content type
-    .use(express.json())
+    .use(json())
 
     // Server only speaks JSON
     .use(accepts)
@@ -48,7 +51,9 @@ function createServer(options) {
     .use(noCache)
 
     // Be explicit about where in the stack routes handlers are positioned
-    .use(app.router)
+    .use(/* TODO: JSFix could not patch the breaking change:
+  remove app.router - is removed */
+  app.router)
 
     // Handle and log server error
     .use(errorHandler(options.logger))

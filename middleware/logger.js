@@ -1,6 +1,6 @@
 module.exports = createMiddleware
 
-var express = require('express')
+const morgan = require('morgan');
 
 /*
  * Wires up the built in express request logger
@@ -8,13 +8,12 @@ var express = require('express')
  */
 function createMiddleware(logger) {
 
-  return express.logger(
-    { format: 'short'
-    , stream:
-      { write: function (data) {
-          logger.info((data + '').trim())
-        }
+  return morgan({ format: 'short'
+  , stream:
+    { write: function (data) {
+        logger.info((data + '').trim())
       }
-    })
+    }
+  })
 
 }

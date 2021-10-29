@@ -11,7 +11,9 @@ describe('middleware/error integration tests', function () {
   before(function () {
     app = express()
 
-    app.use(app.router)
+    app.use(/* TODO: JSFix could not patch the breaking change:
+    remove app.router - is removed */
+    app.router)
     app.use(createMiddleware(logger))
 
     app.get('/', function (req, res, next) {
