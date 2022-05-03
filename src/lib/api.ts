@@ -17,30 +17,24 @@ export interface CorsOptions {
 export interface CfApiOptions {
   allowedDomains?: string[]
   checkOrigin?: OriginChecker
-  logger?: typeof console
-  maxBodySize?: string
   initialMiddleware?: null | (() => void)
   corsOptions?: CorsOptions
-  contentTypes?: string[]
+  // With defaults
+  logger: typeof console
+  maxBodySize: string
+  contentTypes: string[]
 }
 
 const defaults: CfApiOptions = {
   logger: console,
   maxBodySize: '100kb',
-  contentTypes: ['application/json', 'text/csv']
-}
-
-/*
- * Create a new API instance
- */
-function createApi(options: CfApiOptions) {
-  return new Api(options)
+  contentTypes: ['application/json', 'text/csv'],
 }
 
 class Api {
   readonly options: CfApiOptions
 
-  constructor(options: CfApiOptions) {
+  constructor(options: Partial<CfApiOptions>) {
     this.options = { ...defaults, ...options }
   }
 
@@ -68,6 +62,13 @@ class Api {
       return callback(null, true)
     }
   }
+}
+
+/*
+ * Create a new API instance
+ */
+function createApi(options: CfApiOptions) {
+  return new Api(options)
 }
 
 export default createApi
