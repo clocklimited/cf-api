@@ -6,7 +6,10 @@ import { CorsOptions, OriginChecker } from '../api'
  * Set cross-domain oriented headers, and check incoming
  * requests to ensure they come from allowed domains.
  */
-const createCorsMiddleware = (checkOrigin: OriginChecker, options?: CorsOptions) => {
+const createCorsMiddleware = (
+  checkOrigin: OriginChecker,
+  options?: CorsOptions
+) => {
   const middleware: RequestHandler = (req, res, next) => {
     if (req.headers.origin) {
       // Check if this client should be served

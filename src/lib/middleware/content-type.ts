@@ -10,14 +10,10 @@ const contentTypeMiddleware = (types: string[]) => {
     if (isValidType(req.headers['content-type'])) return next()
     if (!req.headers['content-type'])
       return res.status(400).json({ error: 'API requires a content-type' })
-    res
-      .status(400)
-      .json({
-        error:
-          'API does not support ' +
-          req.headers['content-type'] +
-          ' content-type',
-      })
+    res.status(400).json({
+      error:
+        'API does not support ' + req.headers['content-type'] + ' content-type',
+    })
   }
 
   /*
