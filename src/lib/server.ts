@@ -1,17 +1,18 @@
-import express from 'express'
-import responseTime from 'response-time'
 import bodyParser from 'body-parser'
-import logger from './middleware/logger'
-import tag from './middleware/tag'
+import express from 'express'
+// import responseTime from 'response-time'
+
+import { CfApiOptions, OriginChecker } from './api'
 import accepts from './middleware/accepts'
 import contentType from './middleware/content-type'
 import cors from './middleware/cors'
 import errorHandler from './middleware/error'
+import logger from './middleware/logger'
 import noCache from './middleware/no-cache'
+import tag from './middleware/tag'
 
-function createServer(options) {
+function createServer(options: CfApiOptions, checkOrigin: OriginChecker) {
   const app = express()
-  const contentTypes = options.contentTypes || ['application/json', 'text/csv']
 
   // Using Express behind a reverse proxy such as Varnish or Nginx is trivial,
   // however it does require configuration. By enabling the "trust proxy"
@@ -36,14 +37,14 @@ function createServer(options) {
     .use(responseTime())
 
     // Whitelist cross domain requests
-    .use(cors(options.checkOrigin, options.corsOptions))
+    .use(cors(checkOrigin, options.corsOptions))
 
     // Body parse API for JSON content type
     .use(bodyParser.json({ limit: options.maxBodySize }))
 
     // Server only speaks JSON
     .use(accepts)
-    .use(contentType(contentTypes))
+    .use(contentType(options.contentTypes))
 
     // Set headers to prevent caching
     .use(noCache)

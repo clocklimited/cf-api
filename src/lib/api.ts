@@ -3,11 +3,16 @@ import createServer from './server'
 export type OriginCheckerCallback = (
   error: null | Error,
   allowed: boolean
-) => null
+) => void
+
 export type OriginChecker = (
   domain: string,
   callback: OriginCheckerCallback
 ) => void
+
+export interface CorsOptions {
+  exposeHeaders?: string
+}
 
 export interface CfApiOptions {
   allowedDomains?: string[]
@@ -15,7 +20,7 @@ export interface CfApiOptions {
   logger?: typeof console
   maxBodySize?: string
   initialMiddleware?: null | (() => void)
-  corsOptions?: { exposeHeaders?: string }
+  corsOptions?: CorsOptions
   contentTypes?: string[]
 }
 
