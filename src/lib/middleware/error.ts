@@ -11,7 +11,7 @@ import { CfApiOptions } from '../api'
 const createErrorMiddleware = (logger: CfApiOptions['logger']) => {
   // Last param is errors but boy are linters unhappy about it
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const middleware: ErrorRequestHandler = (error, req, res, _) => {
+  const middleware: ErrorRequestHandler = (error, req, res, next) => {
     res.status(error.status || 500).json({ error: error.message })
     if (logger) {
       logger.error(
