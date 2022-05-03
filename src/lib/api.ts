@@ -1,53 +1,67 @@
 import createServer from './server'
 
-export interface ApiOptions {
+export type OriginCheckerCallback = (
+  error: null | Error,
+  allowed: boolean
+) => null
+export type OriginChecker = (
+  domain: string,
+  callback: OriginCheckerCallback
+) => void
+
+export interface CfApiOptions {
   allowedDomains?: string[]
-  checkOrigin?: (domain: string, callback) => void
+  checkOrigin?: OriginChecker
   logger?: typeof console
   maxBodySize?: string
+  initialMiddleware?: null | (() => void)
   corsOptions?: { exposeHeaders?: string }
+  contentTypes?: string[]
 }
 
-const defaults = {
-  checkOrigin: function (domain, cb) {
-    // Allow all domains by default
-    cb(null, true)
-  },
+const defaults: CfApiOptions = {
   logger: console,
   maxBodySize: '100kb',
-  initialMiddleware: null,
-  corsOptions: { exposeHeaders: '' },
+  contentTypes: ['application/json', 'text/csv']
 }
 
 /*
  * Create a new API instance
  */
-function createApi(options: ApiOptions) {
+function createApi(options: CfApiOptions) {
   return new Api(options)
 }
 
 class Api {
-  readonly options: ApiOptions
+  readonly options: CfApiOptions
 
-  constructor(options: ApiOptions) {
+  constructor(options: CfApiOptions) {
     this.options = { ...defaults, ...options }
-
-    // Support an array of allowedDomains for backwards compatibility
-    if (Array.isArray(this.options.allowedDomains)) {
-      this.options.checkOrigin = function (domain, cb) {
-        if (this.options.allowedDomains.indexOf(domain) === -1) {
-          return cb(null, false)
-        }
-        return cb(null, true)
-      }.bind(this)
-    }
   }
 
-  /*
+  /**
    * Create and return the server.
    */
   initialize() {
-    return createServer(this.options)
+    return createServer(this.options, this.checkOrigin)
+  }
+
+  /**
+   * Checks if a specified domain is allowed to access the API
+   */
+  checkOrigin(domain: string, callback: OriginCheckerCallback) {
+    // Support an array of allowedDomains for backwards compatibility
+    if (Array.isArray(this.options.allowedDomains)) {
+      if (this.options.allowedDomains.indexOf(domain) === -1) {
+        return callback(null, false)
+      }
+      return callback(null, true)
+    } else if (typeof this.options.checkOrigin === 'function') {
+      return this.options.checkOrigin(domain, callback)
+    } else {
+      // Allow all domains by default
+      return callback(null, true)
+    }
   }
 }
 
