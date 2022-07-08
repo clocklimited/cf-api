@@ -54,6 +54,7 @@ describe('middleware/cors unit tests', function () {
       assert.deepEqual(
         { 'Access-Control-Allow-Origin': 'http://127.0.0.1/'
         , 'Access-Control-Allow-Headers': 'Authorization, Content-Type, x-cf-date, x-cf-ttl, *'
+        , 'Access-Control-Allow-Credentials': true
         , 'Access-Control-Request-Headers': '*'
         , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
         }, headers)
@@ -79,6 +80,7 @@ describe('middleware/cors unit tests', function () {
       assert.deepEqual(
         { 'Access-Control-Allow-Origin': 'http://127.0.0.1/'
         , 'Access-Control-Allow-Headers': 'Authorization, Content-Type, x-cf-date, x-cf-ttl, *'
+        , 'Access-Control-Allow-Credentials': true
         , 'Access-Control-Request-Headers': '*'
         , 'Access-Control-Expose-Headers': 'Filename'
         , 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE, PATCH'
