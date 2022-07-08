@@ -48,6 +48,9 @@ Create and return the server.
 
 ## Changelog
 
+### 3.1.0
+- Cors header `Access-Control-Allow-Credentials` is now set to `true`
+
 ### 3.0.0
 - `express` is now installed as a peer dependency
 
