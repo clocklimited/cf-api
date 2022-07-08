@@ -48,8 +48,11 @@ Create and return the server.
 
 ## Changelog
 
-### 3.1.0
+### 3.1.1
 - Cors header `Access-Control-Allow-Credentials` is now set to `true`
+
+### 3.1.0
+ - mis-tagged commit from unpulled work, unpublished.
 
 ### 3.0.0
 - `express` is now installed as a peer dependency
